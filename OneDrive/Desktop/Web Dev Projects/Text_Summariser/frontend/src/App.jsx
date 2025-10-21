@@ -93,12 +93,12 @@ export default function App() {
 return (
   <div className="relative flex flex-col lg:flex-row justify-start lg:justify-between items-start min-h-screen bg-[#f5ebd6] px-6 lg:px-16 py-6 overflow-hidden font-body">
     
-   {/* Logout button fixed at top-left */}
+
 <div className="absolute top-6 left-6">
   <LogOut setToken={setToken} />
 </div>
 
- {/* Left side - message with personal info */}
+
 <div className="w-1/2 flex flex-col justify-start items-start space-y-4 mt-16 animate-[floatIn_2s_ease-in-out]">
   <h1 className="text-8xl font-extrabold text-[#78350f] leading-tight tracking-tight animate-[bounceIn_2.5s_ease-in-out] font-heading">
     Read Less.<br />
@@ -125,10 +125,14 @@ return (
   <p className="text-lg text-[#78350f] font-semibold italic mt-1">
     Your AI-powered text companion.
   </p>
+
+   <p className="text-lg text-[#78350f] font-semibold italic mt-1">
+    Github - https://github.com/loneandhungry/Text_Summariser
+  </p>
 </div>
 
 
-    {/* Right side - summariser card */}
+    
     <div className="w-full lg:w-1/2 flex flex-col justify-start items-center bg-[#fdf5eb] p-6 sm:p-8 lg:p-10 rounded-3xl border border-[#92400e] shadow-lg hover:shadow-2xl transition-all duration-500 mt-8 lg:mt-0">
       <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-extrabold text-[#78350f] mb-6 lg:mb-10 text-center font-heading">
         Text Summariser
@@ -136,7 +140,7 @@ return (
 
       {token ? (
         <>
-          {/* PDF Upload Section */}
+    
           <div className="w-full max-w-2xl mb-6 lg:mb-10">
             <div className="bg-[#fef3e7] border-2 border-[#92400e] rounded-2xl shadow-md hover:shadow-xl 
                             transition-all duration-300 p-4 sm:p-6 flex flex-col items-center justify-center w-full">
@@ -156,7 +160,7 @@ return (
             </div>
           </div>
 
-          {/* Summariser Section */}
+        
           <div className="bg-[#fdf5ec] shadow-xl p-4 sm:p-6 lg:p-6 rounded-3xl border border-[#92400e] w-full max-w-2xl">
             <h2 className="text-xl sm:text-2xl md:text-2xl lg:text-2xl font-bold text-center mb-3 sm:mb-4 text-[#78350f] font-heading">
               Generate a Summary (Text or PDF)
