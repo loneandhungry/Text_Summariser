@@ -1,12 +1,12 @@
 import express from "express";
-import {summarizeText} from "./control.js";
+import {chunker, summarizeText} from "./control.js";
 import jwt from "jsonwebtoken";
 import cors from "cors"
 import { OAuth2Client } from "google-auth-library"
 import {limiter} from "./control.js";
 import { verify } from "./authMiddlewares.js";
 import multer from "multer";
-import { PDFParse } from "pdf-parse";
+import { PDFParse } from "pdf-parse"
 
 const route = express.Router();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -19,27 +19,53 @@ route.use(cors({
 route.get("/",(req,res)=>{
     res.send("YAYY");
 })
-
-const storage = multer.memoryStorage();
-const upload = multer( { storage : storage });
-
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 route.post("/summarise",verify,limiter,upload.single("file"),async(req,res)=>{
-     let text = req.body.text || null;
-     if(req.file){
+     let text = req.body.text || null ;
+    
+    if(req.file){
+        console.log("File Received");
         try{
-        const data = await PDFParse(req.file.buffer);
-        text = data ;
-        } catch (err){
-            res.send("Failed to parse PDF. Upload a smaller one")
+            const parser = new PDFParse({data: req.file.buffer});
+            const data = await parser.getText();
+            await parser.destroy();
+        text +="\n" + data.text;
+        console.log("Extracted text from PDF:", data.text);
+        console.log("File parsed");
+        } catch(err){
+            console.log(`Not able to parse the pdf : ${err.message}`);
         }
-     }
+    }
+
+
+     /*
+    if(req.file){
+        const pdfBuffer = req.file.buffer;
+        const pdf = await TextFromPdf(pdfBuffer,req.file.name);
+        if(!pdf) return res.status(600).json({msg:"Failed to extract the text from pdf"});
+        text +="\n" + pdf;
+    }
+*/
+
+    if (!text || text.trim().length === 0) {
+    return res.status(400).json({ msg: "No text found to summarise" });
+    }
+
      const length = req.body.length;
-     const result = await summarizeText(text,length);
-     if(result.error){
-       return res.send("Please enter a valid string and a valid length optional.");
+
+     let total = [];
+     const chunks = chunker(text);
+     for(let i = 0 ; i < chunks.length ; i++){
+        let part = await summarizeText(chunks[i],length);
+        if(part.error) {continue};
+        total.push(part.summary);
      }
-     res.json({summary : result.summary });
+     const result =  total.join(" ");
+
+   
+     res.json({summary : result });
 });
 
 route.post("/auth",async(req,res) =>{
