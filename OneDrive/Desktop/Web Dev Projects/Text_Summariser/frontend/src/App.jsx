@@ -15,7 +15,7 @@ export function Login({ setToken }) {
             const res = await axios.post('http://localhost:5000/auth', { token });
             localStorage.setItem("token", res.data.token);
             setToken(res.data.token);
-            alert("Logged in! Token saved.");
+            alert("Please upload a PDF File, or put in a text. And select the size of summary you want.")
           }}
           onError={() => console.log("Login Failed.")}
         />
@@ -71,6 +71,12 @@ export default function App() {
       setSummary(response.data.summary);
     } catch (err) {
       if(err.response){
+        if(err.response.status === 429){
+          alert("Can make only 5 requests in 20 mins. Please try again later.");
+        }
+         if(err.response.status === 400){
+          alert("Cannot send an empty body.")
+        }
         if(err.response.status === 401){
           alert("Please login first.")
         }
@@ -144,9 +150,9 @@ return (
           <div className="w-full max-w-2xl mb-6 lg:mb-10">
             <div className="bg-[#fef3e7] border-2 border-[#92400e] rounded-2xl shadow-md hover:shadow-xl 
                             transition-all duration-300 p-4 sm:p-6 flex flex-col items-center justify-center w-full">
-              <h2 className="text-base sm:text-lg lg:text-lg font-semibold text-[#78350f] mb-2 sm:mb-3 flex items-center gap-2 font-heading">
-                Upload PDF
-              </h2>
+              <h4 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#78350f] mb-2 sm:mb-3 flex items-center gap-2 font-heading">
+                  Upload PDF
+                </h4>
               <PDFUpload
                 setSummary={setSummary}
                 length={length}
@@ -162,8 +168,8 @@ return (
 
         
           <div className="bg-[#fdf5ec] shadow-xl p-4 sm:p-6 lg:p-6 rounded-3xl border border-[#92400e] w-full max-w-2xl">
-            <h2 className="text-xl sm:text-2xl md:text-2xl lg:text-2xl font-bold text-center mb-3 sm:mb-4 text-[#78350f] font-heading">
-              Generate a Summary (Text or PDF)
+            <h2 className="text-xl sm:text-2xl md:text-2xl lg:text-4xl font-bold text-center mb-3 sm:mb-4 text-[#78350f] font-heading">
+              Text Box
             </h2>
 
             <textarea

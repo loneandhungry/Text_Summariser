@@ -32,7 +32,7 @@ route.post("/summarise",verify,limiter,upload.single("file"),async(req,res)=>{
             const data = await parser.getText();
             await parser.destroy();
         text +="\n" + data.text;
-        console.log("Extracted text from PDF:", data.text);
+
         console.log("File parsed");
         } catch(err){
             console.log(`Not able to parse the pdf : ${err.message}`);
@@ -40,18 +40,6 @@ route.post("/summarise",verify,limiter,upload.single("file"),async(req,res)=>{
     }
 
 
-     /*
-    if(req.file){
-        const pdfBuffer = req.file.buffer;
-        const pdf = await TextFromPdf(pdfBuffer,req.file.name);
-        if(!pdf) return res.status(600).json({msg:"Failed to extract the text from pdf"});
-        text +="\n" + pdf;
-    }
-*/
-
-    if (!text || text.trim().length === 0) {
-    return res.status(400).json({ msg: "No text found to summarise" });
-    }
 
      const length = req.body.length;
 

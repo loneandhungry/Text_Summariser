@@ -1,13 +1,14 @@
+
+///NOT USED IN THE PROJECT YET
+
+
 import axios from "axios";
 import { useState } from "react";
 
 export function PDFUpload({setSummary, length, setLoading, token,loading}){
     const [file,setFile] = useState(null);
     async function HandlePDFUpload(file){
-        if(!file){
-            alert("Please upload a PDF File.");
-            return
-        }
+       
         const formData = new FormData();
         formData.append("file",file);
         formData.append("length",length);
@@ -20,9 +21,9 @@ export function PDFUpload({setSummary, length, setLoading, token,loading}){
           "Content-Type": "multipart/form-data",
         }})
         setSummary(res.data.summary);
-         alert("File successfully uploaded and summarised.");
+         alert("File successfully uploaded and summarised down (down of the page).");
     } catch (err) {
-      console.error(err);
+      console.log(err);
       alert("Problem in uploading the PDF");
     } finally {
       setLoading(false);
